@@ -1,6 +1,7 @@
 package rxlib
 
 type ThreadTypeRegister struct { // This type is the data type of records found in rexa's registry
+
 	DepIds    []string // IDs of the dependencies of the thread type
 	InitFunc  InitFn   // Initialization function of threads of this type
 	DnitFunc  DnitFn   // Deinitialization function of threads of this type
