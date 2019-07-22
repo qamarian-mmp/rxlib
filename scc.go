@@ -47,10 +47,12 @@ const (
 	/*
 		Section A: The following data here are states a follower can be in.
 	*/
-	UnableToStart byte = 0
-	NowActive     byte = 1
-	Failed        byte = 2
-	NowDead       byte = 3
+	UnableToStart byte = 0 // Means the follower was unable to start-up successfully
+	Active        byte = 1 // Means the follower is running
+	Failed        byte = 2 /* Means the follower was running in the past, but when it encountred
+		a problem, it shutdown */
+	Dead          byte = 3 /* Means the follower was running in the past, but now offline
+		because it has completed its task. */
 )
 
 type SCChan struct { // The data type of an SC channel.
@@ -111,7 +113,7 @@ func (fInt *SCCFInterface) State (state byte, additionalInfo ... string) { /* Th
 		the value of "input 0". For instance, if value of "input 0" is rxlib.Failed, value
 		of this data can be something like: "Log file could be opened.". */
 
-	if state != UnableToStart && state != NowActive && state != Failed && state != NowDead {
+	if state != UnableToStart && state != Active && state != Failed && state != Dead {
 		return
 	}
 	fInt.underlyingChan.followerState = state
