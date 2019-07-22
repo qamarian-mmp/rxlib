@@ -2,16 +2,16 @@ package rxlib
 
 /*
    The data types in this file implement a state-communication channel (SCC). By SCC, we mean a data
-that can be used by a follower, to communicate its state to a master. In rexa's case, the kernel can
+that can be used by a follower, to communicate its state to a master. In Rexa's case, the kernel can
 be the master and a delegate being the follower, or a delegate can be the master and its thread
 being the follower. For example, if a delegate wants to know if its thread is still running, how
 can it know? Well, a data like this is what you turn to.
 
 How SCC Works
 
-To get a new SCC, call the function NewSCChan (), a pointer to a new SCC would be returned.
+To get a new SCC, call the function NewSCC (), a pointer to a new SCC would be returned.
 
-	scc := rxlib.NewSCChan ()
+	scc := rxlib.NewSCC ()
 
 Afterwads, get an interface for the master, and also one for the follower.
 
@@ -37,8 +37,8 @@ info.
 
 */
 
-func NewSCChan () (*SCChan) { /* This function creates a new SC channel (SCC). Note, it is
-	recommended to always use this function to create new SCCs. */
+func NewSCC () (*SCChan) { /* This function creates a new SC channel (SCC). Note, it is recommended
+	to always use this function to create new SCCs. */
 
 	return &SCChan {}
 }
