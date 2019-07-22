@@ -111,7 +111,10 @@ func (fInt *SCCFInterface) State (state byte, additionalInfo ... string) { /* Th
 		the value of "input 0". For instance, if value of "input 0" is rxlib.Failed, value
 		of this data can be something like: "Log file could be opened.". */
 
-	fInt.underlyingChan.followerState = UnableToStart
+	if state != UnableToStart && state != NowActive && state != Failed && state != NowDead {
+		return
+	}
+	fInt.underlyingChan.followerState = state
 	if len (additionalInfo) > 0 {
 		fInt.underlyingChan.additionalInfo = additionalInfo [0]
 	}

@@ -1,4 +1,4 @@
-# rx-lib: Rexa Standard Library
+# rx-lib: Rexa's Standard Library
 
 This package is the standard library of [Rexa](http://github.com/qamarian-mop/rexa). The package
 majorly contains implementation of some abstact data types used by Rexa and software based on it.
