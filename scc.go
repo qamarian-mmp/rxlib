@@ -37,10 +37,10 @@ info.
 
 */
 
-func NewSCC () (*SCChan) { /* This function creates a new SC channel (SCC). Note, it is recommended
-	to always use this function to create new SCCs. */
+func NewSCC () (*SCC) { /* This function creates a new SC channel (SCC). Note, it is recommended to
+	always use this function to create new SCCs. */
 
-	return &SCChan {}
+	return &SCC {}
 }
 
 const (
@@ -55,21 +55,21 @@ const (
 		because it has completed its task. */
 )
 
-type SCChan struct { // The data type of an SC channel.
+type SCC struct { // The data type of an SC channel.
 	followerState  byte
 	additionalInfo string
 }
 
 // State-communication-channel Master Interface Section
 
-func (scChan *SCChan) MInterface () (*SCCMInterface) { /* This method can be used to get a master
+func (scc *SCC) MInterface () (*SCCMInterface) { /* This method can be used to get a master
 	interface to be used for an SCC. */
 
-	return &SCCMInterface {scChan}
+	return &SCCMInterface {scc}
 }
 
 type SCCMInterface struct { // The data type of a master interface
-	underlyingChan *SCChan
+	underlyingChan *SCC
 }
 
 func (mInt *SCCMInterface) WhatsUp () (byte, string) { /* To ask for the state of the follower, this
@@ -89,14 +89,14 @@ func (mInt *SCCMInterface) WhatsUp () (byte, string) { /* To ask for the state o
 
 // State-communication-channel Follower Interface Section
 
-func (scChan *SCChan) FInterface () (*SCCFInterface) { /* This method can be used to get a follower
+func (scc *SCC) FInterface () (*SCCFInterface) { /* This method can be used to get a follower
 	interface to be used for an SCC. */
 
-	return &SCCFInterface {scChan}
+	return &SCCFInterface {scc}
 }
 
 type SCCFInterface struct { // The data type of a follower interface
-	underlyingChan *SCChan
+	underlyingChan *SCC
 }
 
 func (fInt *SCCFInterface) State (state byte, additionalInfo ... string) { /* This method can be
