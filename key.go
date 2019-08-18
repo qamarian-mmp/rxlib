@@ -20,9 +20,9 @@ type Key interface {
 }
 
 var (
-	StateStartup         byte = 0
-	StateStartupFailure  byte = 1
-	StateRunning         byte = 2
-	StateError           byte = 3
-	StateDone            byte = 4
+	StateStartup        byte = 0
+	StateFailedStartup  byte = 1
+	StateRunning        byte = 2
+	StateError          byte = 3
+	StateDone           byte = 4
 )
