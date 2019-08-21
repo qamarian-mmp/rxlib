@@ -5,7 +5,8 @@ import (
 	"sync"
 )
 
-func NewRxKey (commChan *rnet.PPO, shutChan *sync.Cond, commNet *rnet.NetCentre) (*RxKey) {
+// NewRxKey () helps create a new Rx Key. This function is meant to be used by rexa.
+func NewRxKey (commChan *rnet.PPO, shutChan *sync.Cond, commNet *rnet.NetCentre) (*RxKey){
 	return &RxKey {
 		commChan:           commChan,
 		startupResult:      SrUnavailable,
@@ -18,16 +19,20 @@ func NewRxKey (commChan *rnet.PPO, shutChan *sync.Cond, commNet *rnet.NetCentre)
 }
 
 type RxKey struct {
-	commChan           *rnet.PPO
-	startupResult      byte
-	startupNote        string
-	systemShutdownChan *sync.Cond
-	shutdownSignal     bool
-	shutdownState      bool
-	commNetCentre      *rnet.NetCentre
+	commChan           *rnet.PPO       // The channel the key uses for communication.
+	startupResult      byte            // The startup result of the key's main,
+	startupNote        string          // The startup note of the key's main.
+	systemShutdownChan *sync.Cond      /* The data that could be used to signal
+		shutdown to the system. */
+	shutdownSignal     bool            /* The data indicating if the key's main has
+		been asked to shutdown or not. */
+	shutdownState      bool            /* The data indicating if the key's main has
+		been shutdown or not. */
+	commNetCentre      *rnet.NetCentre /* The network making it possible for the main
+		of the system to communicate. */
 }
 
-// Master operations
+// Master key methods
 
 func (rxk *RxKey) StartupResult () (byte, string) {
 	return rxk.startupResult, rxk.startupNote
@@ -41,7 +46,7 @@ func (rxk *RxKey) ShutdownState () (bool) {
 	return rxk.shutdownState
 }
 
-// Main operations
+// Normal key methods
 
 func (rxk *RxKey) StartupFailed (note string) {
 	rxk.startupResult = SrStartupFailed
