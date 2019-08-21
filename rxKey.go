@@ -16,11 +16,13 @@ func NewRxKey (commChan *rnet.PPO, shutChan *sync.Cond, commNet *rnet.NetCentre)
 		startupNote:          "",
 		systemShutdownChan: shutChan,
 		shutdownSignal:     false,
-		shutdownState:      SrUnavailable,
+		shutdownState:      SsNotApplicable,
 		commNetCentre:      commNet,
 	}
 }
 
+// Note that this data is not thread-safe. In other words, it should not be shared by two
+// or more goroutines.
 type RxKey struct {
 	commChan           *rnet.PPO       // The channel the key uses for communication.
 	startupResult      byte            // The startup result of the key's main,
@@ -32,7 +34,7 @@ type RxKey struct {
 	shutdownState      byte            /* The data indicating if the key's main has
 		been shutdown or not. */
 	commNetCentre      *rnet.NetCentre /* The network making it possible for the main
-		of the system to communicate. */
+		to communicate with other mains in the system. */
 }
 
 
@@ -41,8 +43,7 @@ type RxKey struct {
 
 // ----- Master key methods -----
 
-// StartupResult () gives the startup result of the 'main' using the corresponding key of
-// this key.
+// StartupResult () gives the startup result of the main using the key.
 //
 // Outpts
 //
@@ -50,13 +51,12 @@ type RxKey struct {
 // variable section of this package.
 //
 // outpt 1: If value of outpt 0 is SrStartupFailed, value of this data would be a text
-// describing the reason for the failure.
+// describing the reason for the failure, otherwise, value would be an empty string.
 func (rxk *RxKey) StartupResult () (byte, string) {
 	return rxk.startupResult, rxk.startupNote
 }
 
-// ShutdownMain  () could be used to signal shutdown to the 'main' using the
-// corresponding key of this key.
+// ShutdownMain  () could be used to signal shutdown to the main using this key.
 func (rxk *RxKey) ShutdownMain () {
 	rxk.shutdownSignal = true
 }
@@ -67,7 +67,7 @@ func (rxk *RxKey) ShutdownMain () {
 
 // ----- Normal key methods -----
 
-// StartupFailed() should be called if the main is unable to startup successfully. The
+// StartupFailed () should be called if the main is unable to startup successfully. The
 // reason for startup failure should be provided as the input of this method.
 func (rxk *RxKey) StartupFailed (note string) {
 	rxk.startupResult = SrStartupFailed
@@ -76,11 +76,11 @@ func (rxk *RxKey) StartupFailed (note string) {
 
 // NowRunning () should be called if the main is able to startup successfully.
 func (rxk *RxKey) NowRunning () {
-	rxk.startupResult = SrNowRunning
+	rxk.startupResult = SrStartedUp
 	rxk.shutdownState = SsStillRunning
 }
 
-// Send () could be used to send messages to other mains in the system.
+// Send () could be used to send messages to the other mains in the system.
 func (rxk *RxKey) Send (mssg interface {}, recipient string) (error) {
 	return rxk.commChan.Send (mssg, recipient)
 }
@@ -90,7 +90,9 @@ func (rxk *RxKey) Read () (interface {}, error) {
 	return rxk.commChan.Read ()
 }
 
-// Check () could be used to check if there is any new message that could be read.
+// Check () could be used to check if there is any new message that could be read. True
+// would mean there is a message that could be read, while false would means there is no
+// message that could be read.
 func (rxk *RxKey) Check () (bool) {
 	return rxk.commChan.Check ()
 }
@@ -107,7 +109,7 @@ func (rxk *RxKey) Wait () {
 // NewKey () could be used to get a new key. Let's assume, a new main would be created at
 // runtime, the main would also require a key, to join the system. In such a situation,
 // this is the method that helps out. This method creates a new key that could be used by
-// the new main, to communicate with other mains in the system.
+// the new main, to communicate with the other mains in the system.
 //
 // Outpts
 //
@@ -151,9 +153,8 @@ func (rxk *RxKey) IndicateShutdown () {
 
 // ----- Common methods -----
 
-// ShutdownState () could be used to get the shutdown state of the 'main' using the
-// corresponding key of this key. True means the 'main' is down, while false means the
-// 'main' is still active or has not run at all.
+// ShutdownState () could be used to get the shutdown state of the main using this key.
+// Check posssible values in the variable section.
 func (rxk *RxKey) ShutdownState () (byte) {
 	return rxk.shutdownState
 }
