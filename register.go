@@ -19,6 +19,6 @@ func (r *Register) Dep () ([]string) {
 	return r.dep
 }
 
-func (r *Register) StartupFunc (func (Key)) {
+func (r *Register) StartupFunc () (func (Key)) {
 	return r.startupFunc
 }
