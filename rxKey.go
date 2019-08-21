@@ -21,8 +21,8 @@ func NewRxKey (commChan *rnet.PPO, shutChan *sync.Cond, commNet *rnet.NetCentre)
 	}
 }
 
-// Note that this data is not thread-safe. In other words, it should not be shared by two
-// or more goroutines.
+// This data type should never be manipulated directly. To manipulate it, use any of its
+// faces that suit you.
 type RxKey struct {
 	commChan           *rnet.PPO       // The channel the key uses for communication.
 	startupResult      byte            // The startup result of the key's main,
