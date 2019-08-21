@@ -1,6 +1,6 @@
 package rxlib
 
-func NewRegister (id string, dep []string, startupFunc func ()) (*Register) {
+func NewRegister (id string, dep []string, startupFunc func (Key)) (*Register) {
 	return &Register {id, dep, startupFunc}
 }
 
