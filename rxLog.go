@@ -1,8 +1,8 @@
 package rxlib
 
 // RxLog is an abstract data type. It serves as Rexa's log. Although, rexa has a default
-// implementation (emissary) of this ADT, feel free to create another implementation
-// (emissary) of this ADT, and replace the default with whatever you create.
+// implementation of this ADT, feel free to create another implementation of this ADT,
+// and replace the default with whatever you create.
 type RxLog interface {
 
 	// Record () could be used to add a new record to the log. The first input
