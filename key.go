@@ -2,27 +2,23 @@ package rxlib
 
 type Key interface {
 
-	State (byte, string)
-
 	StartupFailed (string)
 
 	NowRunning ()
 
-	Send (interface {}, string) error
+	Send (interface {}, string) (error)
 
-	Read (interface {}, error)
+	Read () (interface {}, error)
 
-	Shutdown ()
+	Check () (bool)
 
-	ShutdownIssued () bool
+	Wait ()
 
-	MarkShutdown (string)
+	NewKey (string) (Key, MasterKey, error)
+
+	SystemShutdown ()
+
+	CheckForShutdown () (bool)
+
+	IndicateShutdown ()
 }
-
-var (
-	StateStartup        byte = 0
-	StateFailedStartup  byte = 1
-	StateRunning        byte = 2
-	StateError          byte = 3
-	StateDone           byte = 4
-)
